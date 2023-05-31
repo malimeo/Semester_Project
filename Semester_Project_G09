@@ -1,0 +1,99 @@
+class Hotel:
+    def __init__(self, name, address):
+        self.name = name
+        self.address = address
+        self.rooms = []
+
+    def add_room(self, room):
+        self.rooms.append(room)
+
+    def display_available_rooms(self):
+        print("Available rooms:")
+        for room in self.rooms:
+            if not room.is_booked:
+                print(room)
+
+    def reserve_room(self, room_number, user):
+        for room in self.rooms:
+            if room.number == room_number:
+                if room.is_booked:
+                    print("Room is already booked.")
+                else:
+                    room.book(user)
+                    print("Room successfully booked.")
+                return
+        print("Room not found.")
+
+
+class Room:
+    def __init__(self, number, capacity, price):
+        self.number = number
+        self.capacity = capacity
+        self.price = price
+        self.is_booked = False
+
+    def book(self, user):
+        self.is_booked = True
+        print(f"Room {self.number} has been booked by {user}.")
+
+    def __str__(self):
+        return f"Room {self.number} - Capacity: {self.capacity}, Price: {self.price}"
+
+
+class SingleRoom(Room):
+    def __init__(self, number):
+        super().__init__(number, 4, 3000)
+
+
+class DoubleRoom(Room):
+    def __init__(self, number):
+        super().__init__(number, 8, 5000)
+
+
+class Suite(Room):
+    def __init__(self, number):
+        super().__init__(number, 10, 8000)
+
+
+class User:
+    def __init__(self, name, email):
+        self.name = name
+        self.email = email
+
+    def __str__(self):
+        return self.name
+
+
+def main():
+    hotel = Hotel("Sample Hotel", "123 Main St")
+    hotel.add_room(SingleRoom(110))
+    hotel.add_room(DoubleRoom(160))
+    hotel.add_room(Suite(300))
+
+    print("Welcome to the Hotel Reservation System!")
+    while True:
+        print("\nMenu:")
+        print("1. Display available rooms")
+        print("2. Reserve a room")
+        print("3. Exit")
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            hotel.display_available_rooms()
+        elif choice == "2":
+            try:
+                room_number = int(input("Enter the room number: "))
+                name = input("Enter your name: ")
+                email = input("Enter your email: ")
+                user = User(name, email)
+                hotel.reserve_room(room_number, user)
+            except ValueError:
+                print("Invalid input. Please try again.")
+        elif choice == "3":
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+
+if __name__ == "__main__":
+    main()
